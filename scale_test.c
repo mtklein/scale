@@ -46,6 +46,7 @@ int main(void) {
             check(n,d, want,got);
         }
     }
+    dprintf(1, "fixed point ok\n");
 
     // Using floats for this is basically as straightforward as you'd think.
     for (uint32_t d = 1; d <= 0xffff; d++) {
