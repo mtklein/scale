@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static uint16_t u16(uint64_t x) {
+static uint16_t u16(uint32_t x) {
     assert(x < 0x10000);
     return (uint16_t)x;
 }
@@ -34,20 +34,17 @@ int main(void) {
     //
     // Then n*0xffff/d ≈ (n * (0xffff << k)/d) >> k for arbitrary k >= 16.
     //
-    // Here we try all k in range 16 to 48 (16 or 32 are probably fastest) and
-    // let m = (0xffff << k)/d + 1, where the extra +1 helps some of the n == d
-    // cases round correctly instead of producing 0xfffe.
-    for (int k = 16; k <= 48; k++) {
-        for (uint32_t d = 1; d <= 0xffff; d++) {
-            uint64_t const m = ((uint64_t)0xffff << k) / d + 1;
+    // If we pick k=16, we can just barely fit this in uint32_t.
+    // We let m = (0xffff << k)/d + 1, where the extra +1 helps some of the
+    // n==d cases round correctly instead of producing 0xfffe.
+    for (uint32_t d = 1; d <= 0xffff; d++) {
+        uint32_t const m = 0xffff0000/d + 1;
 
-            for (uint32_t n = 0; n <= d; n++) {
-                uint16_t want = u16(n*0xffff / d),
-                          got = u16(n*m   >>   k);
-                check(n,d, want,got);
-            }
+        for (uint32_t n = 0; n <= d; n++) {
+            uint16_t want = u16(n*0xffff / d),
+                      got = u16(n*m   >>  16);
+            check(n,d, want,got);
         }
-        dprintf(1, "k=%d ok\n", k);
     }
 
     // Using floats for this is basically as straightforward as you'd think.
