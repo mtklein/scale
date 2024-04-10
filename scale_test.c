@@ -35,10 +35,9 @@ int main(void) {
     // Then n*0xffff/d ≈ (n * (0xffff << k)/d) >> k for arbitrary k >= 16.
     //
     // If we pick k=16, we can just barely fit this in uint32_t.
-    // We let m = (0xffff << k)/d + 1, where the extra +1 helps some of the
-    // n==d cases round correctly instead of producing 0xfffe.
+    // And we round (0xffff << 16)/d up to 0xffffffff/d for better edge-case rounding.
     for (uint32_t d = 1; d <= 0xffff; d++) {
-        uint32_t const m = 0xffff0000/d + 1;
+        uint32_t const m = 0xffffffff/d;
 
         for (uint32_t n = 0; n <= d; n++) {
             uint16_t want = u16(n*0xffff / d),
