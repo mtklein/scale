@@ -16,7 +16,7 @@ static uint16_t u16f(float x) {
 static void check(uint32_t n, uint32_t d, uint16_t want, uint16_t got) {
     // We allow 1 bit of error unless n or d is an edge case, which have to be perfect.
     int err = (int)want - (int)got,
-        tol = (n == 0 || n == d || d == 0 || d == 0xffff) ? 0 : 1;
+        tol = (n == 0 || n == d || d == 1 || d == 0xffff) ? 0 : 1;
     if (err > +tol || err < -tol) {
         dprintf(2, "n %u, d %u, want %d, got %d\n", n,d,want,got);
         abort();
