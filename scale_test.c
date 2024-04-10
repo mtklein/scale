@@ -18,7 +18,7 @@ static void check(uint32_t n, uint32_t d, uint16_t want, uint16_t got) {
     int err = (int)want - (int)got,
         tol = (n == 0 || n == d || d == 1 || d == 0xffff) ? 0 : 1;
     if (err > +tol || err < -tol) {
-        dprintf(2, "n %u, d %u, want %d, got %d\n", n,d,want,got);
+        dprintf(2, "n %x, d %x, want %x, got %x\n", n,d,want,got);
         abort();
     }
 }
